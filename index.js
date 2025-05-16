@@ -22,9 +22,7 @@ function generatePaymentLink(paymentId, sum, email) {
     .update(`${shopId}:${sum}:${paymentId}:${secretKey1}`)
     .digest("hex");
 
-  return \`https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=\${shopId}&OutSum=\${sum}&InvId=\${paymentId}&SignatureValue=\${signature}&Email=\${encodeURIComponent(
-    email
-  )}&IsTest=0\`;
+  return `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=${shopId}&OutSum=${sum}&InvId=${paymentId}&SignatureValue=${signature}&Email=${encodeURIComponent(email)}&IsTest=0`;
 }
 
 app.post("/generate-link", (req, res) => {
@@ -49,18 +47,18 @@ app.post("/webhook/robokassa", (req, res) => {
 
   const expectedSignature = crypto
     .createHash("md5")
-    .update(\`\${OutSum}:\${InvId}:\${process.env.ROBO_SECRET2}\`)
+    .update(`${OutSum}:${InvId}:${process.env.ROBO_SECRET2}`)
     .digest("hex");
 
   if (SignatureValue.toLowerCase() !== expectedSignature.toLowerCase()) {
     return res.status(400).send("Invalid signature");
   }
 
-  console.log(\`✅ Payment confirmed: InvId=\${InvId}, OutSum=\${OutSum}\`);
+  console.log(`✅ Payment confirmed: InvId=${InvId}, OutSum=${OutSum}`);
   return res.send("OK");
 });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(\`Robokassa Microservice running on port \${PORT}\`);
+  console.log(`Robokassa Microservice running on port ${PORT}`);
 });
