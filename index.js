@@ -58,7 +58,7 @@ app.post("/webhook/robokassa", (req, res) => {
   return res.send("OK");
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Robokassa Microservice running on port ${PORT}`);
 });
